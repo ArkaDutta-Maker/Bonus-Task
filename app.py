@@ -11,6 +11,10 @@ df['Participant Phone Number'] = df2["Candidate's Mobile"]
 df["Participant Email"] = df2["Candidate's Email"]
 
 df_new = pd.DataFrame(columns = df.columns)
+final_emails = []
+for i in df1["Members"]:
+    emails = i.split(",")
+    final_emails.append(emails)
 
 TeamName = []
 ParticipantType =[]
@@ -20,11 +24,19 @@ ParticipantName=[]
 for cnt, i in enumerate(df1["Team Name"]):
     if i not in df["Team Name"].values:
         row = df1.iloc[cnt]
-        TeamName.append(row["Team Name"])
-        ParticipantType.append("team leader")
-        ParticipantPhoneNumber.append(row["Leader Phone"])
-        ParticipantEmail.append(row["Leader Email"])
-        ParticipantName.append(row["Leader Name"])
+        for j in final_emails[cnt]:
+            if j == row["Leader Email"]:
+                TeamName.append(row["Team Name"])
+                ParticipantType.append("team leader")
+                ParticipantPhoneNumber.append(row["Leader Phone"])
+                ParticipantEmail.append(row["Leader Email"])
+                ParticipantName.append(row["Leader Name"])
+            else:
+                TeamName.append(row["Team Name"])
+                ParticipantType.append("team member")
+                ParticipantPhoneNumber.append("")
+                ParticipantEmail.append(j)
+                ParticipantName.append("")
 
 df_new["Team Name"] = TeamName
 df_new["Participant Type"] = ParticipantType
